@@ -28,13 +28,13 @@ class Value:
     def __neg__(self):
         return self * -1
     
-    def __sub_(self, other: 'Value'):
+    def __sub__(self, other: 'Value'):
         return self + (-other)
     
     def __rsub__(self, other):
         return other + (-self)
     
-    def __mul_(self, other: 'Value'):
+    def __mul__(self, other: 'Value'):
         other = other if isinstance(other, Value) else Value(other)
         out = Value(self.data * other.data, (self, other), '*')
 
@@ -64,7 +64,7 @@ class Value:
     def __rtruediv__(self, other):
         return other * self**-1
     
-    def __tanh(self):
+    def tanh(self):
         tanh = (math.exp(2 * self.data) - 1) / ((math.exp(2 * self.data)) + 1)
         out = Value(tanh, (self, ), 'tanh')
 
