@@ -18,6 +18,7 @@ class Value:
         def _backward():
             self.grad += out.grad
             other.grad += out.grad
+
         self._backward = _backward
 
         return out
@@ -41,6 +42,7 @@ class Value:
         def _backward():
             self.grad += other.data * out.grad
             other.grad += self.data * out.grad
+
         self._backward = _backward
 
         return out
@@ -54,6 +56,7 @@ class Value:
 
         def _backward():
             self.grad += (other * self.data**(other-1)) * out.grad
+
         self._backward = _backward
 
         return out
@@ -70,6 +73,7 @@ class Value:
 
         def _backward():
             self.grad += (1 - tanh**2) * out.grad
+
         self._backward = _backward
 
         return out
@@ -85,9 +89,10 @@ class Value:
                 for u in v._prev:
                     topo_sort(u)
                 stack.append(v)
-        topo_sort(self)
 
-        topo_sorted: list['Value'] = stack.reverse()
+        topo_sort(self)
+        topo_sorted: list['Value'] = reversed(stack)
+
         for node in topo_sorted:
             node._backward()
 
