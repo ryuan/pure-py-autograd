@@ -19,11 +19,11 @@ class Value:
             self.grad += out.grad
             other.grad += out.grad
 
-        self._backward = _backward
+        out._backward = _backward
 
         return out
     
-    def __radd__(self, other):
+    def __radd__(self, other: 'Value'):
         return self + other
     
     def __neg__(self):
@@ -32,7 +32,7 @@ class Value:
     def __sub__(self, other: 'Value'):
         return self + (-other)
     
-    def __rsub__(self, other):
+    def __rsub__(self, other: 'Value'):
         return other + (-self)
     
     def __mul__(self, other: 'Value'):
@@ -43,28 +43,28 @@ class Value:
             self.grad += other.data * out.grad
             other.grad += self.data * out.grad
 
-        self._backward = _backward
+        out._backward = _backward
 
         return out
     
-    def __rmul__(self, other):
+    def __rmul__(self, other: 'Value'):
         return self * other
     
-    def __pow__(self, other):
+    def __pow__(self, other: 'Value'):
         assert isinstance(other, (int, float))
-        out = Value(self.data**other, (self, ), f'**{self.data}')
+        out = Value(self.data**other, (self, ), f'**{other}')
 
         def _backward():
             self.grad += (other * self.data**(other-1)) * out.grad
 
-        self._backward = _backward
+        out._backward = _backward
 
         return out
     
-    def __truediv__(self, other):
+    def __truediv__(self, other: 'Value'):
         return self * other**-1
     
-    def __rtruediv__(self, other):
+    def __rtruediv__(self, other: 'Value'):
         return other * self**-1
     
     def tanh(self):
@@ -74,7 +74,7 @@ class Value:
         def _backward():
             self.grad += (1 - tanh**2) * out.grad
 
-        self._backward = _backward
+        out._backward = _backward
 
         return out
     

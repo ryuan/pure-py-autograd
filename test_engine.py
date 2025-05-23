@@ -28,7 +28,7 @@ def test_sanity_check():
     print(f"ymg = {ymg.data}; ypt = {ypt.data.item()}")
     assert ymg.data == ypt.data.item()
     # backward pass went well
-    print(f"xmg = {xmg.grad}; xpt = {xpt.data.item()}")
+    print(f"xmg = {xmg.grad}; xpt = {xpt.grad.item()}")
     assert xmg.grad == xpt.grad.item()
 
 def test_more_ops():
@@ -67,9 +67,12 @@ def test_more_ops():
 
     tol = 1e-6
     # forward pass went well
+    print(f"gmg = {gmg.data}; gpt = {gpt.data.item()}")
     assert abs(gmg.data - gpt.data.item()) < tol
     # backward pass went well
+    print(f"amg = {amg.grad}; apt = {apt.grad.item()}")
     assert abs(amg.grad - apt.grad.item()) < tol
+    print(f"bmg = {bmg.grad}; bpt = {bpt.grad.item()}")
     assert abs(bmg.grad - bpt.grad.item()) < tol
 
 if __name__ == "__main__":
