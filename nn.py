@@ -41,19 +41,24 @@ class MLP(Module):
     def __call__(self, ins):
         for layer in self.layers:
             ins = layer(ins)
-
         return ins
     
     def parameters(self):
         return [param for layer in self.layers for param in layer.parameters()]
-    
-xs = [
-  [2.0, 3.0, -1.0],
-  [3.0, -1.0, 0.5],
-  [0.5, 1.0, 1.0],
-  [1.0, 1.0, -1.0],
-]
-ys = [1.0, -1.0, -1.0, 1.0] # desired targets
-n = MLP(len(xs[0]),[4, 4, 1])
-ypred = [n(x) for x in xs]
-print(ypred)
+
+    def train(self, ins_matrix, ygts, epochs=20, lr=0.01):
+        for epoch in range(epochs):
+            # forward pass to get outputs for each input set from the input set matrix
+            ypreds = [self(ins) for ins in ins_matrix]
+            loss = sum((ypred - ygt)**2 for ypred, ygt in zip(ypreds, ygts))
+
+            # backward pass to update gradients across each layers' nodes
+            for param in self.parameters():
+                param.grad = 0.0
+            loss.backward()
+
+            # update and reduce loss
+            for param in self.parameters():
+                param.data += -lr * param.grad
+
+            
